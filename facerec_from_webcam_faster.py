@@ -96,9 +96,22 @@ while True:
     # Display the resulting image
     cv2.imshow('Video', frame)
 
-    # Hit 'q' on the keyboard to quit!
+    # Hit 'q' on the keyboard to capture a new face
     if cv2.waitKey(1) & 0xFF == ord('q'):
-        break
+        # break
+        print "Please Enter the User's Name"
+        name = raw_input() + '.jpg'
+        out = cv2.imwrite(directory + '/' + name, frame)
+
+        # Train the new captured face
+
+        _image = face_recognition.load_image_file(directory + '/' + name)
+        _face_encoding = face_recognition.face_encodings(_image)[0]
+
+        known_face_encodings.append(_face_encoding)
+        known_face_names.append(name)
+
+        print '\nDone!'
 
 # Release handle to the webcam
 video_capture.release()
