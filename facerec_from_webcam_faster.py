@@ -1,6 +1,9 @@
 import face_recognition
 import cv2
 import os
+import pyttsx
+
+engine = pyttsx.init()
 
 # This is a demo of running face recognition on live video from your webcam. It's a little more complicated than the
 # other example, but it includes some basic performance tweaks to make things run a lot faster:
@@ -25,7 +28,7 @@ for filename in os.listdir(directory):
         face_encoding = face_recognition.face_encodings(image)[0]
 
         known_face_encodings.append(face_encoding)
-        known_face_names.append(filename.split()[0])
+        known_face_names.append(filename.split('.')[0])
         continue
 
 # Load a second sample picture and learn how to recognize it.
@@ -44,6 +47,7 @@ face_locations = []
 face_encodings = []
 face_names = []
 process_this_frame = True
+last_predicted_name = ''
 
 while True:
     # Grab a single frame of video
@@ -73,6 +77,12 @@ while True:
                 name = known_face_names[first_match_index]
             if name != "Unknown":
                 face_names.append(name)
+
+                if name != last_predicted_name:
+                    last_predicted_name = name
+                    engine.say(name)
+                    engine.runAndWait()
+
 
     process_this_frame = not process_this_frame
 
